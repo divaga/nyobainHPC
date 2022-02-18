@@ -58,7 +58,7 @@ HeadNode:
     RootVolume:
       Size: 50
   Networking:
-    SubnetId: subnet-01c69a1cb858835cb     ## Public subnet yang sudah dibuat, lihat di file wrf.yaml
+    SubnetId: subnet-XXXXXXXXXX     ## Public subnet yang sudah dibuat, lihat di file wrf.yaml
   DisableSimultaneousMultithreading: true
   Ssh:
     KeyName: wrf                  ## keypair yang sudah dibuat
@@ -85,7 +85,7 @@ Scheduling:
       PlacementGroup:
         Enabled: true
       SubnetIds:
-      - subnet-038e354ac0d7e115f                 ## Private subnet yang sudah dibuat, lihat di file wrf.yaml
+      - subnet-XXXXXXXXXX                 ## Private subnet yang sudah dibuat, lihat di file wrf.yaml
 SharedStorage:
   - MountDir: /shared      
     Name: ebs
