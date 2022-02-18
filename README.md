@@ -30,7 +30,7 @@ pcluster configure --config wrf.yaml
 
 Pilih nilai berikut untuk setting konfigurasi:
 
-- AWS Region ID [us-east-1]:  **us-east-1**  ## Atau region lain yang dianjurkan dalam workshop 
+- AWS Region ID [us-east-2]:  **us-east-2**  ## Atau region lain yang dianjurkan dalam workshop 
 - EC2 Key Pair Name [ee-default-keypair]: **pilih keypair yang sudah dibuat**
 - Scheduler [slurm]: **slurm**
 - Operating System [alinux2]: **alinux2**
@@ -41,7 +41,7 @@ Pilih nilai berikut untuk setting konfigurasi:
 - Compute instance type for compute resource 1 in queue1 [t2.micro]: **c5n.18xlarge**
 - Maximum instance count [10]: **2**
 - Automate VPC creation? (y/n) [n]: **y**
-- Availability Zone [us-east-1a]: **us-east-1a**
+- Availability Zone [us-east-2b]: **us-east-2b**
 - Network Configuration [Head node in a public subnet and compute fleet in a private subnet]:  **Head node in a public subnet and compute fleet in a private subnet**      
 
 3. Tunggu proses konfigurasi tersebut sampai selesai
@@ -49,7 +49,7 @@ Pilih nilai berikut untuk setting konfigurasi:
 4. Buat file baru, ganti nilai subnet dengan referensi dari file wrf.yaml, simpan file baru ini dengan nama wrf.yaml juga
 
 ```
-Region: us-east-1
+Region: us-east-2
 Image:
   Os: alinux2
 HeadNode:
