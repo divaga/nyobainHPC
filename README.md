@@ -110,6 +110,11 @@ SharedStorage:
       DeploymentType: SCRATCH_2
 ```
 
+Konfigurasi diatas akan membuat 2 buah mount point
+
+1. /shared - Untuk menyimpan persistent data seperti aplikasi yang diinstal di head node (wfr, dll)
+2. /scratch - Shared Volume menggunakan FSx for Lustre
+
 ## Membuat HPC Cluster
 
 1. Dengan file yaml tersebut, kita akan membuat cluster yang bernama "wrf-cluster" 
@@ -173,4 +178,134 @@ mpirun -n 4 ${HOME}/bin/hello
 2. Jalankan kode MPI tersebut di *compute node* dengan perintah berikut:
 ```
 srun --mpi=pmix -n 4 ${HOME}/bin/hello
+```
+
+## Instalasi WRF
+
+Untuk mempermudah instalasi WRF, kita membutuhkan package manager yaitu spack. Copy Paste command dibawah ini untuk instalasi spack
+
+```
+export SPACK_ROOT=/shared/spack
+mkdir -p $SPACK_ROOT
+git clone -c feature.manyFiles=true https://github.com/spack/spack $SPACK_ROOT
+echo "export SPACK_ROOT=/shared/spack" >> $HOME/.bashrc
+echo "source \$SPACK_ROOT/share/spack/setup-env.sh" >> $HOME/.bashrc
+source $HOME/.bashrc
+```
+
+Install patchelf menggunakan spack 
+
+```
+spack install patchelf
+spack find 
+spack load patchelf
+which patchelf
+```
+
+Install Intel compiler dan Intel MPI
+
+```
+spack install intel-oneapi-compilers intel-oneapi-mpi
+```
+
+Proses diatas membutuhkan waktu sekitar 5-10 menit. Setelah terinstall pastikan path intel-oneapi-compilers, intel-oneapi-mpi ada di dalam spack compilers
+
+```
+spack compiler add `spack location -i intel-oneapi-compilers`/compiler/latest/linux/bin/intel64
+spack compiler add `spack location -i intel-oneapi-compilers`/compiler/latest/linux/bin
+spack compilers
+```
+
+ParallelCluster melakukan instalasi beberapa software yang ada di dalam cluster HPC, maka dari itu tambahkan software tersebut ke dalam spack dengan perintah dibawah ini
+
+```
+module load intelmpi openmpi libfabric-aws
+spack external find
+```
+
+Kita akan melakukan instalasi WRF dengan menggunakan compute node. Kita gunakan slurm untuk melakukan submit job ke dalam slurm.
+
+```
+cat <<EOF > wrf-install.sbatch
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH --exclusive
+
+echo "Installing WRF on \$SLURM_CPUS_ON_NODE cores."
+module load intelmpi
+spack install -j \$SLURM_CPUS_ON_NODE wrf%intel build_type=dm+sm ^intel-mpi
+EOF
+```
+
+install wrf menggunakan slurm dengan perintah dibawah. Proses ini akan memakan waktu sekitar 45-60 menit.
+
+```
+sbatch wrf-install.sbatch
+```
+
+Untuk melakukan check hasil slurm, bisa lihat outputnya yang ada di direktori yang sama dengan script yang diekseskusi.
+
+```
+cat slurm-<jobID>.out
+```
+
+Ketika WRF sudah terinstall, maka kita load ke dalam spack dengan perintah dibawah
+
+```
+spack load wrf
+```
+
+## Mencoba proses data CONUS12KM menggunakan WRF
+
+Download file data ke folder /scratch kemudian buat simlink
+
+```
+cd /scratch
+curl -O https://www2.mmm.ucar.edu/wrf/OnLineTutorial/wrf_cloud/wrf_simulation_CONUS12km.tar.gz
+tar -xzf wrf_simulation_CONUS12km.tar.gz
+cd /scratch/conus_12km/
+WRF_ROOT=$(spack location -i wrf%intel)/test/em_real/
+ln -s $WRF_ROOT .
+```
+
+Submit script job menggunakan slurm. Buat script dengan nama slurm-wrf-conus12km.sh 
+
+```
+#!/bin/bash
+#SBATCH --job-name=WRF
+#SBATCH --output=conus-%j.out
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=12
+#SBATCH --exclusive
+
+spack load wrf
+set -x
+wrf_exe=$(spack location -i wrf)/run/wrf.exe
+ulimit -s unlimited
+ulimit -a
+
+export OMP_NUM_THREADS=6
+export FI_PROVIDER=efa
+export I_MPI_FABRICS=ofi
+export I_MPI_OFI_LIBRARY_INTERNAL=0
+export I_MPI_OFI_PROVIDER=efa
+export I_MPI_PIN_DOMAIN=omp
+export KMP_AFFINITY=compact
+export I_MPI_DEBUG=4
+
+set +x
+module load intelmpi
+set -x
+time mpirun -np $SLURM_NTASKS --ppn $SLURM_NTASKS_PER_NODE $wrf_exe
+```
+
+Keterangan script diatas:
+- menggunakan 2x c5n.18xlarge instances
+- Masing-masing compute node mempunya 12 MPI processes (--ntasks-per-node=12)
+- Each node has 6 OpenMP threads (export OMP_NUM_THREADS=6)
+
+Submit job tersebut menggunakan slurm 
+
+```
+sbatch slurm-wrf-conus12km.sh
 ```
