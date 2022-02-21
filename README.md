@@ -5,10 +5,16 @@ Mencoba High Performance Computing di AWS
 Silahkan login ke AWS Console, jika anda menggunakan akun AWS di event workshop AWS, silahkan ikuti tata cara untuk masuk ke dalam console dan region yang digunakan
 
 ## Membuat EC2 Keypair
-Keypair ini akan digunakan untuk membuat HPC cluster, masuk ke menu EC2 dan buat serta download keypair tersebut. 
+Keypair ini akan digunakan untuk membuat HPC cluster, masuk ke menu EC2 kemudian pilih **Network & Security**, pilih Key Pairs. Buat serta download keypair tersebut.
+
+![image1](keypair.png)
 
 ## Membuat Environment Cloud9
-Kita akan menggunakan Cloud9 sebagai IDE dalam workshop ini, silahkan create Cloud9 environment dengan semua setting menggunakan nilai default
+Kita akan menggunakan Cloud9 sebagai IDE dalam workshop ini. Pilih Menu **Cloud9** lalu pilih Create Environment, silahkan create Cloud9 environment dengan semua setting menggunakan nilai default. 
+
+- Name: [wrf-workshop], lalu next
+- Cost-saving pilih **After four hours**, lalu next
+- Pilih Create Environment
 
 Upload Keypair yang sudah kita buat kedalam Cloud9
 
