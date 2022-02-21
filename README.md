@@ -309,3 +309,7 @@ Submit job tersebut menggunakan slurm
 ```
 sbatch slurm-wrf-conus12km.sh
 ```
+
+Contoh hasil result dari conus12
+
+![image2](resources/images/rslconus.png)
