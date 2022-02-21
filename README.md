@@ -7,7 +7,7 @@ Silahkan login ke AWS Console, jika anda menggunakan akun AWS di event workshop 
 ## Membuat EC2 Keypair
 Keypair ini akan digunakan untuk membuat HPC cluster, masuk ke menu EC2 kemudian pilih **Network & Security**, pilih Key Pairs. Buat serta download keypair tersebut.
 
-![image1](keypair.png)
+![image1](resources/images/keypair.png)
 
 ## Membuat Environment Cloud9
 Kita akan menggunakan Cloud9 sebagai IDE dalam workshop ini. Pilih Menu **Cloud9** lalu pilih Create Environment, silahkan create Cloud9 environment dengan semua setting menggunakan nilai default. 
