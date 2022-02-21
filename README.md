@@ -302,7 +302,7 @@ time mpirun -np $SLURM_NTASKS --ppn $SLURM_NTASKS_PER_NODE $wrf_exe
 Keterangan script diatas:
 - menggunakan 2x c5n.18xlarge instances
 - Masing-masing compute node mempunya 12 MPI processes (--ntasks-per-node=12)
-- Each node has 6 OpenMP threads (export OMP_NUM_THREADS=6)
+- Masing-masing node menggunakan 6 OpenMP threads (export OMP_NUM_THREADS=6)
 
 Submit job tersebut menggunakan slurm 
 
