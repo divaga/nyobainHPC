@@ -16,7 +16,9 @@ Kita akan menggunakan Cloud9 sebagai IDE dalam workshop ini. Pilih Menu **Cloud9
 - Cost-saving pilih **After four hours**, lalu next
 - Pilih Create Environment
 
-Upload Keypair yang sudah kita buat kedalam Cloud9
+setelah kita buat Cloud9 environment, jendela editor Cloud9 akan terbuka 
+
+Upload Keypair yang sudah kita buat kedalam Cloud9. Pilih menu File -> Upload local Files. Pilih pem yang tadi anda sudah download pada pembuatan Keypair
 
 ## Instalasi ParallelCluster
 Dalam workshop ini, semua perintah akan dijalankan di Cloud9.
@@ -67,7 +69,7 @@ HeadNode:
     SubnetId: subnet-XXXXXXXXXX     ## Public subnet yang sudah dibuat, lihat di file wrf.yaml
   DisableSimultaneousMultithreading: true
   Ssh:
-    KeyName: wrf                  ## keypair yang sudah dibuat
+    KeyName: wrf                  ## nama keypair yang sudah dibuat
 Scheduling:
   Scheduler: slurm
   SlurmQueues:
@@ -108,7 +110,6 @@ SharedStorage:
       DeploymentType: SCRATCH_2
 ```
 
-
 ## Membuat HPC Cluster
 
 1. Dengan file yaml tersebut, kita akan membuat cluster yang bernama "wrf-cluster" 
@@ -124,7 +125,7 @@ pcluster list-clusters
 
 3. Login kedalam cluster dengan perintah berikut:
 ```
-pcluster ssh --cluster-name wrf-cluster -i ./wrf.pem
+pcluster ssh --cluster-name wrf-cluster -i ./[nama keypair]
 ```
 
 4. Validasi cluster dengan eksekusi perintah `sinfo` dan  `df -h` 
