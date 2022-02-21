@@ -49,7 +49,7 @@ Pilih nilai berikut untuk setting konfigurasi:
 - Compute instance type for compute resource 1 in queue1 [t2.micro]: **c5n.18xlarge**
 - Maximum instance count [10]: **2**
 - Automate VPC creation? (y/n) [n]: **y**
-- Availability Zone [us-east-2b]: **us-east-2b**
+- Availability Zone [us-east-2b]: **us-east-2a**
 - Network Configuration [Head node in a public subnet and compute fleet in a private subnet]:  **Head node in a public subnet and compute fleet in a private subnet**      
 
 3. Tunggu proses konfigurasi tersebut sampai selesai
